@@ -1,3 +1,23 @@
+class AppTestCase(DockerComposeTestCase):
+    def setUp(self):
+        super(AppTestCase, self).setUp()
+
+        self._tokens = {}
+        self.curl_until_success(8000)
+
+    def make_request(self, command, path, data={}, params={}, user="test1"):
+        auth = requests.auth.HTTPBasicAuth(user, "password12")
+
+        if path.startswith("http://"):
+            url = path
+        else:
+            url = "http://{}:8000/".format(self.get_docker_host())
+            if path:
+                url += path + "/"
+
+        return getattr(requests, command)(
+            url, auth=auth, data=data, params=params)
+            
 class TestFlask(AppTestCase):
     compose_file = "docker-compose.yml"
 
