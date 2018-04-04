@@ -1,7 +1,24 @@
 #zhanchen
 import unittest
 import requests
-from web.app import Expression
+from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+
+app = Flask(__name__)
+URI = 'postgresql://cs162_user:cs162_password@db/cs162'
+app.config['SQLALCHEMY_DATABASE_URI'] = URI
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+class Expression(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(200))
+    value = db.Column(db.Numeric)
+    now = db.Column(db.TIMESTAMP)
+
+
 
 class IntergrationTest(unittest.TestCase):
 
